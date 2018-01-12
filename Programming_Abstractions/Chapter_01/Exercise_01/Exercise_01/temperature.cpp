@@ -3,12 +3,14 @@
 using namespace std;
 
 int main() {
-    double celsius;
+    double celsius, fahrenheit;
 
-    cout << "Convert temperature from Celsius to Farenheit." << endl;
+    cout << "Convert temperature from Celsius to Fahrenheit." << endl;
     cin >> celsius;
 
-    cout << celsius << " Celsius is " << 9 * celsius / 5 + 32 << " Farenheit." << endl;
+    fahrenheit = 9 * celsius / 5 + 32;
+
+    cout << celsius << " Celsius is " << fahrenheit << " Fahrenheit." << endl;
     getchar(); getchar(); /* Shame! */
     
     return 0;
