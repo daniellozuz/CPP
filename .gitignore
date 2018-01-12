@@ -38,3 +38,6 @@
 *.sdf
 *.opensdf
 *.vcxproj
+*.tlog
+*.pdb
+*.ilk
