@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 
 using namespace std;
@@ -16,8 +17,11 @@ struct payroll_t {
     employee_t *employees;
 };
 
+const double TAX_RATE = 0.25;
+
 payroll_t get_payroll(int number_of_employees);
 void show_payroll(payroll_t payroll, int number_of_employees);
+void print_payroll(payroll_t payroll, int number_of_employees);
 
 int main(void) {
     int number_of_employees;
@@ -28,6 +32,7 @@ int main(void) {
 
     payroll_t the_payroll = get_payroll(number_of_employees);
     show_payroll(the_payroll, number_of_employees);
+    print_payroll(the_payroll, number_of_employees);
 
     cin.get();
     return 0;
@@ -63,5 +68,19 @@ void show_payroll(payroll_t payroll, int number_of_employees) {
         cout << "\t SSNum: " << payroll.employees[i].ssnum << endl;
         cout << "\t Salary: " << payroll.employees[i].salary << endl;
         cout << "\t Withholding exemptions: " << payroll.employees[i].withholding << endl;
+    }
+}
+
+void print_payroll(payroll_t payroll, int number_of_employees) {
+    cout << setw(20) << left << "Name" << setw(10) << right << "Gross";
+    cout << setw(10) << "Tax" << setw(10) << "Net" << endl;
+    cout << "--------------------------------------------------" << endl;
+    for (int i = 0; i < number_of_employees; i++) {
+        string name = payroll.employees[i].name;
+        double gross = payroll.employees[i].salary;
+        double tax = TAX_RATE * (gross - payroll.employees[i].withholding);
+        double net = gross - tax;
+        cout << setw(20) << left << name << setw(10) << right << gross << " - ";
+        cout << setw(7) << tax << " = " << setw(7) << net << endl;
     }
 }
