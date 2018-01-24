@@ -13,9 +13,7 @@ const double ARRIVAL_PROBABILITY = 0.10;
 const int MIN_SERVICE_TIME = 5;
 const int MAX_SERVICE_TIME = 15;
 
-void run_simulation0(void);
-void run_simulation10(void);
-void run_simulation11(void);
+void run_simulation(int n_exercise, int n_queues, int n_cashiers);
 void run_simulation12(void);
 void report_results(int n_served, long total_waiting_time, long total_q_length, int exercise_number, int n_queues, int n_cashiers);
 int random_integer(int minimum, int maximum);
@@ -25,46 +23,21 @@ void arrive(vector<queue<int>> &qs, int t);
 int main(void) {
     srand(time(NULL));
 
-    run_simulation0();
-    run_simulation10();
-    run_simulation11();
+    run_simulation(0, 1, 1);
+    run_simulation(10, NUMBER_OF_QUEUES, NUMBER_OF_QUEUES);
+    run_simulation(11, 1, NUMBER_OF_CASHIERS);
     run_simulation12();
 
     cin.get();
     return 0;
 }
 
-void run_simulation0(void) {
-    queue<int> q;
-    int service_time_remaining = 0;
-    int n_served = 0;
-    long total_waiting_time = 0;
-    long total_q_length = 0;
-    for (int t = 0; t < SIMULATION_TIME; t++) {
-        if (random_chance(ARRIVAL_PROBABILITY))
-            q.push(t);
-        if (service_time_remaining > 0) {
-            service_time_remaining--;
-            if (service_time_remaining == 0)
-                n_served++;
-        }
-        else if (!q.empty()) {
-            total_waiting_time += t - q.front();
-            q.pop();
-            service_time_remaining = random_integer(MIN_SERVICE_TIME, MAX_SERVICE_TIME);
-        }
-        total_q_length += q.size();
-    }
-    report_results(n_served, total_waiting_time, total_q_length, 0, 1, 1);
-}
-
-void run_simulation10(void) {
+void run_simulation(int n_exercise, int n_queues, int n_cashiers) {
     vector<queue<int>> qs;
-    for (int i = 0; i < NUMBER_OF_QUEUES; i++) {
+    for (int i = 0; i < n_queues; i++) {
         queue<int> q;
         qs.push_back(q);
     }
-    int n_cashiers = NUMBER_OF_QUEUES;
     vector<int> service_times_remaining;
     for (int i = 0; i < n_cashiers; i++)
         service_times_remaining.push_back(0);
@@ -74,83 +47,62 @@ void run_simulation10(void) {
     for (int t = 0; t < SIMULATION_TIME; t++) {
         if (random_chance(ARRIVAL_PROBABILITY))
             arrive(qs, t);
-        for (int i = 0; i < qs.size(); i++) {
+        for (int i = 0; i < n_cashiers; i++) {
             if (service_times_remaining[i] > 0) {
                 service_times_remaining[i]--;
                 if (service_times_remaining[i] == 0)
                     n_served++;
             }
-            else if (!qs[i].empty()) {
-                total_waiting_time += t - qs[i].front();
-                qs[i].pop();
+            else if (!qs[i % n_queues].empty()) {
+                total_waiting_time += t - qs[i % n_queues].front();
+                qs[i % n_queues].pop();
                 service_times_remaining[i] = random_integer(MIN_SERVICE_TIME, MAX_SERVICE_TIME);
             }
-            total_q_length += qs[i].size();
+            total_q_length += qs[i % n_queues].size();
         }
     }
-    report_results(n_served, total_waiting_time, total_q_length, 10, NUMBER_OF_QUEUES, n_cashiers);
-}
-
-void run_simulation11(void) {
-    queue<int> q;
-    int service_times_remaining[NUMBER_OF_CASHIERS] = { 0 };
-    int n_served = 0;
-    long total_waiting_time = 0;
-    long total_q_length = 0;
-    for (int t = 0; t < SIMULATION_TIME; t++) {
-        if (random_chance(ARRIVAL_PROBABILITY))
-            q.push(t);
-        for (int i = 0; i < NUMBER_OF_CASHIERS; i++) {
-            if (service_times_remaining[i] > 0) {
-                service_times_remaining[i]--;
-                if (service_times_remaining[i] == 0)
-                    n_served++;
-            }
-            else if (!q.empty()) {
-                total_waiting_time += t - q.front();
-                q.pop();
-                service_times_remaining[i] = random_integer(MIN_SERVICE_TIME, MAX_SERVICE_TIME);
-            }
-            total_q_length += q.size();
-        }
-    }
-    report_results(n_served, total_waiting_time, total_q_length, 11, 1, NUMBER_OF_CASHIERS);
+    report_results(n_served, total_waiting_time, total_q_length, n_exercise, n_queues, n_cashiers);
 }
 
 void run_simulation12(void) {
+    int n_exercise = 12;
     int n_served = 1;
     int n_cashiers = 0;
+    int n_queues = 1;
     long total_q_length;
-    long best_waiting_time = LONG_MAX;
-    while (best_waiting_time / n_served > GOAL) {
+    long total_waiting_time = LONG_MAX;
+    while (total_waiting_time / n_served > GOAL) {
         n_cashiers++;
-        queue<int> q;
+        vector<queue<int>> qs;
+        for (int i = 0; i < n_queues; i++) {
+            queue<int> q;
+            qs.push_back(q);
+        }
         vector<int> service_times_remaining;
         for (int i = 0; i < n_cashiers; i++)
             service_times_remaining.push_back(0);
         n_served = 0;
-        long total_waiting_time = 0;
+        total_waiting_time = 0;
         total_q_length = 0;
         for (int t = 0; t < SIMULATION_TIME; t++) {
             if (random_chance(ARRIVAL_PROBABILITY))
-                q.push(t);
+                arrive(qs, t);
             for (int i = 0; i < n_cashiers; i++) {
                 if (service_times_remaining[i] > 0) {
                     service_times_remaining[i]--;
                     if (service_times_remaining[i] == 0)
                         n_served++;
                 }
-                else if (!q.empty()) {
-                    total_waiting_time += t - q.front();
-                    q.pop();
+                else if (!qs[i % n_queues].empty()) {
+                    total_waiting_time += t - qs[i % n_queues].front();
+                    qs[i % n_queues].pop();
                     service_times_remaining[i] = random_integer(MIN_SERVICE_TIME, MAX_SERVICE_TIME);
                 }
-                total_q_length += q.size();
+                total_q_length += qs[i % n_queues].size();
             }
         }
-        best_waiting_time = total_waiting_time;
     }
-    report_results(n_served, best_waiting_time, total_q_length, 12, 1, n_cashiers);
+    report_results(n_served, total_waiting_time, total_q_length, n_exercise, n_queues, n_cashiers);
     cout << n_cashiers << " cashiers needed to get below " << GOAL << " average waiting time." << endl;
 }
 
