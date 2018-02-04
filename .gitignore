@@ -50,6 +50,7 @@ stdafx.cpp
 *.ipch
 *.db
 *.opendb
+targetver.h
 
 # OpenCV files
 *.jpg
