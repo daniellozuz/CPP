@@ -43,3 +43,13 @@
 *.ilk
 *.idb
 *.log
+
+# Visual Studio 2017 specific
+stdafx.h
+stdafx.cpp
+*.ipch
+*.db
+*.opendb
+
+# OpenCV files
+*.jpg
