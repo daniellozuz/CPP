@@ -31,7 +31,6 @@ int main(void) {
 	point_t pt = { 0, 0, 1 };
 
 	initialize_chessboard();
-	show_chessboard();
 
 	find_tour(pt);
 
@@ -107,15 +106,15 @@ point_t next_position(point_t pt, direction_t dir) {
 }
 
 void unoccupy(point_t pt) {
-	chessboard[pt.y][pt.x].state = 0;
+	chessboard[pt.x][pt.y].state = 0;
 }
 
 void occupy(point_t pt) {
-	chessboard[pt.y][pt.x].state = pt.state;
+	chessboard[pt.x][pt.y].state = pt.state;
 }
 
 bool occupied(point_t pt) {
-	return (chessboard[pt.y][pt.x].state != 0);
+	return (chessboard[pt.x][pt.y].state != 0);
 }
 
 bool outside_board(point_t pt) {
