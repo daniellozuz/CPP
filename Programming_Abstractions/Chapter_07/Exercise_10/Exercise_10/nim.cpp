@@ -7,7 +7,6 @@ const int WINNING_POSITION = 1000;
 const int NEUTRAL_POSITION = 0;
 const int LOSING_POSITION = -WINNING_POSITION;
 const int MAX_DEPTH = 10000;
-
 const int N_COINS = 13;
 const int MAX_MOVE = 3;
 const int NO_GOOD_MOVE = -1;
@@ -83,11 +82,11 @@ void display_game(state_t state) {
 
 move_t find_best_move(state_t state, int depth, int &rating) {
 	vector<move_t> move_list;
+	move_t best_move;
 	generate_move_list(state, move_list);
 	int n_moves = move_list.size();
 	if (n_moves == 0)
 		cout << "Error! No moves available";
-	move_t best_move;
 	int min_rating = WINNING_POSITION + 1;
 	for (int i = 0; i < n_moves && min_rating != LOSING_POSITION; i++) {
 		move_t move = move_list[i];
@@ -143,8 +142,7 @@ move_t choose_computer_move(state_t state) {
 
 void generate_move_list(state_t state, vector<move_t> &move_list) {
 	for (int i = 1; i <= MAX_MOVE; i++) {
-		move_t move = move_t(i);
-		if (move_is_legal(move, state))
+		if (move_is_legal(move_t(i), state))
 			move_list.push_back(move_t(i));
 	}
 }
@@ -171,10 +169,8 @@ void announce_result(state_t state) {
 	display_game(state);
 	if (check_for_win(state, Human))
 		cout << "You win." << endl;
-	else if (check_for_win(state, Computer))
-		cout << "I win." << endl;
 	else
-		cout << "Cat's game." << endl;
+		cout << "I win." << endl;
 }
 
 player_t whose_turn(state_t state) {
