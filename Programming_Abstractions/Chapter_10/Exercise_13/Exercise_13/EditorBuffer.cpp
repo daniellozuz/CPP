@@ -53,23 +53,20 @@ void EditorBuffer::move_cursor_to_end() {
 
 void EditorBuffer::insert_character(char ch) {
 	if (cursor.cell != start) {
-		if (cursor.cell->length < BLOCK_SIZE) {
+		if (cursor.cell->length < BLOCK_SIZE)
 			move_and_insert(ch);
-		}
 		else {
 			cell_t *cp = new cell_t;
-			for (int i = 0; i < BLOCK_SIZE / 2; i++) {
+			for (int i = 0; i < BLOCK_SIZE / 2; i++)
 				cp->block[i] = cursor.cell->block[BLOCK_SIZE / 2 + i];
-			}
 			cp->length = BLOCK_SIZE / 2;
 			cp->next = cursor.cell->next;
 			cp->prev = cursor.cell;
 			cp->next->prev = cp;
 			cursor.cell->next = cp;
 			cursor.cell->length = BLOCK_SIZE / 2;
-			if (cursor.position <= BLOCK_SIZE / 2) {
+			if (cursor.position <= BLOCK_SIZE / 2)
 				move_and_insert(ch);
-			}
 			else {
 				cursor.cell = cp;
 				cursor.position -= BLOCK_SIZE / 2;
@@ -99,12 +96,24 @@ void EditorBuffer::move_and_insert(char ch) {
 }
 
 void EditorBuffer::delete_character() {
-	/*if (cursor->next != start) {
-		cell_t *old_cell = cursor->next;
-		cursor->next = old_cell->next;
-		old_cell->next->prev = cursor;
-		delete old_cell;
-	}*/
+	if (cursor.position < cursor.cell->length) {
+		for (int i = cursor.position; i < cursor.cell->length - 1; i++)
+			cursor.cell->block[i] = cursor.cell->block[i + 1];
+		cursor.cell->length--;
+	}
+	else if (cursor.cell->next != start) {
+		if (cursor.cell->next->length > 1) {
+			for (int i = 0; i < cursor.cell->next->length - 1; i++)
+				cursor.cell->next->block[i] = cursor.cell->next->block[i + 1];
+			cursor.cell->next->length--;
+		}
+		else {
+			cell_t *old_cell = cursor.cell->next;
+			cursor.cell->next = old_cell->next;
+			old_cell->next->prev = cursor.cell;
+			delete old_cell;
+		}
+	}
 }
 
 void EditorBuffer::display() {
@@ -120,5 +129,4 @@ void EditorBuffer::display() {
 	for (int i = 0; i < cursor.position; i++)
 		cout << "  ";
 	cout << '^' << endl;
-	cout << cursor.position << endl;
 }
