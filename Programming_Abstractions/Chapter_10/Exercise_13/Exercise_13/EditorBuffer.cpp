@@ -33,7 +33,9 @@ void EditorBuffer::move_cursor_forward() {
 void EditorBuffer::move_cursor_backward() {
 	if (cursor.position > 1)
 		cursor.position--;
-	else if (cursor.cell->prev != start) {
+	else if (cursor.cell->prev == start || cursor.cell == start)
+		move_cursor_to_start();
+	else {
 		cursor.cell = cursor.cell->prev;
 		cursor.position = cursor.cell->length;
 	}
@@ -52,16 +54,12 @@ void EditorBuffer::move_cursor_to_end() {
 void EditorBuffer::insert_character(char ch) {
 	if (cursor.cell != start) {
 		if (cursor.cell->length < BLOCK_SIZE) {
-			for (int i = cursor.cell->length; i > cursor.position; i--)
-				cursor.cell->block[i] = cursor.cell->block[i - 1];
-			cursor.cell->block[cursor.position] = ch;
-			cursor.cell->length++;
-			cursor.position++;
+			move_and_insert(ch);
 		}
 		else {
 			cell_t *cp = new cell_t;
 			for (int i = 0; i < BLOCK_SIZE / 2; i++) {
-				cp->block[i] = cursor.cell->block[BLOCK_SIZE / 2 + i - 1];
+				cp->block[i] = cursor.cell->block[BLOCK_SIZE / 2 + i];
 			}
 			cp->length = BLOCK_SIZE / 2;
 			cp->next = cursor.cell->next;
@@ -70,20 +68,12 @@ void EditorBuffer::insert_character(char ch) {
 			cursor.cell->next = cp;
 			cursor.cell->length = BLOCK_SIZE / 2;
 			if (cursor.position <= BLOCK_SIZE / 2) {
-				for (int i = cursor.cell->length; i > cursor.position; i--)
-					cursor.cell->block[i] = cursor.cell->block[i - 1];
-				cursor.cell->block[cursor.position] = ch;
-				cursor.cell->length++;
-				cursor.position++;
+				move_and_insert(ch);
 			}
 			else {
 				cursor.cell = cp;
 				cursor.position -= BLOCK_SIZE / 2;
-				for (int i = cursor.cell->length; i > cursor.position; i--)
-					cursor.cell->block[i] = cursor.cell->block[i - 1];
-				cursor.cell->block[cursor.position] = ch;
-				cursor.cell->length++;
-				cursor.position++;
+				move_and_insert(ch);
 			}
 		}
 	}
@@ -96,7 +86,16 @@ void EditorBuffer::insert_character(char ch) {
 		cp->next->prev = cp;
 		cursor.cell->next = cp;
 		cursor.position = 1;
+		cursor.cell = cp;
 	}
+}
+
+void EditorBuffer::move_and_insert(char ch) {
+	for (int i = cursor.cell->length; i > cursor.position; i--)
+		cursor.cell->block[i] = cursor.cell->block[i - 1];
+	cursor.cell->block[cursor.position] = ch;
+	cursor.cell->length++;
+	cursor.position++;
 }
 
 void EditorBuffer::delete_character() {
@@ -121,4 +120,5 @@ void EditorBuffer::display() {
 	for (int i = 0; i < cursor.position; i++)
 		cout << "  ";
 	cout << '^' << endl;
+	cout << cursor.position << endl;
 }

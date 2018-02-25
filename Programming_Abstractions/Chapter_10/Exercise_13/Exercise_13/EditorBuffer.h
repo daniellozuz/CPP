@@ -18,7 +18,6 @@ public:
 	void display();
 
 private:
-	
 	struct cell_t {
 		char block[BLOCK_SIZE];
 		int length;
@@ -31,6 +30,7 @@ private:
 	};
 	cell_t *start;
 	cursor_t cursor;
+	void move_and_insert(char ch);
 };
 
 #endif
