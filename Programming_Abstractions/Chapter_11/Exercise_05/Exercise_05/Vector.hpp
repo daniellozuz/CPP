@@ -2,14 +2,13 @@
 
 template <typename T>
 Vector<T>::Vector() {
-	capacity = INITIAL_CAPACITY;
+	head = NULL;
 	count = 0;
-	elements = new T[capacity];
 }
 
 template <typename T>
 Vector<T>::~Vector() {
-	delete[] elements;
+	clear();
 }
 
 template <typename T>
@@ -19,40 +18,52 @@ inline int Vector<T>::size() {
 
 template <typename T>
 bool Vector<T>::is_empty() {
-	return count == 0;
+	return (count == 0);
 }
 
 template <typename T>
 void Vector<T>::clear() {
-	delete[] elements;
-	capacity = INITIAL_CAPACITY;
-	count = 0;
-	elements = new T[capacity];
+	while (count > 0)
+		remove_at(0);
 }
 
 template <typename T>
 T Vector<T>::get_at(int index) {
 	if (index < 0 || index >= count)
 		cout << "ERROR: getAt: index out of range";
-	return elements[index];
+	cell_t *cursor = head;
+	for (int i = 0; i < index; i++)
+		cursor = cursor->next;
+	return cursor->element;
 }
 
 template <typename T>
 void Vector<T>::set_at(int index, T element) {
 	if (index < 0 || index >= count)
 		cout << "ERROR: setAt: index out of range";
-	elements[index] = element;
+	cell_t *cursor = head;
+	for (int i = 0; i < index; i++)
+		cursor = cursor->next;
+	cursor->element = element;
 }
 
 template <typename T>
 void Vector<T>::insert_at(int index, T element) {
-	if (count == capacity)
-		expand_capacity();
 	if (index < 0 || index > count)
 		cout << "ERROR: insertAt: index out of range";
-	for (int i = count; i > index; i--)
-		elements[i] = elements[i - 1];
-	elements[index] = element;
+	cell_t *new_cell = new cell_t;
+	new_cell->element = element;
+	if (index == 0) {
+		new_cell->next = head;
+		head = new_cell;
+	}
+	else {
+		cell_t *cursor = head;
+		for (int i = 0; i < index - 1; i++)
+			cursor = cursor->next;
+		new_cell->next = cursor->next;
+		cursor->next = new_cell;
+	}
 	count++;
 }
 
@@ -60,8 +71,19 @@ template <typename T>
 void Vector<T>::remove_at(int index) {
 	if (index < 0 || index >= count)
 		cout << "ERROR: removeAt: index out of range";
-	for (int i = index; i < count - 1; i++)
-		elements[i] = elements[i + 1];
+	if (index == 0) {
+		cell_t *old_cell = head;
+		head = head->next;
+		delete old_cell;
+	}
+	else {
+		cell_t *cursor = head;
+		for (int i = 0; i < index - 1; i++)
+			cursor = cursor->next;
+		cell_t *old_cell = cursor->next;
+		cursor->next = old_cell->next;
+		delete old_cell;
+	}
 	count--;
 }
 
@@ -74,7 +96,10 @@ template <typename T>
 T &Vector<T>::operator[](int index) {
 	if (index < 0 || index >= count)
 		cout << "ERROR: Vector selection index out of range";
-	return elements[index];
+	cell_t *cursor = head;
+	for (int i = 0; i < index; i++)
+		cursor = cursor->next;
+	return cursor->element;
 }
 
 template <typename T>
@@ -96,7 +121,7 @@ Vector<T>::Iterator::Iterator(Vector *vp) {
 template <typename T>
 bool Vector<T>::Iterator::has_next() {
 	if (vp == NULL)
-		Ecout << "ERROR: has_next called on uninitialized iterator";
+		cout << "ERROR: has_next called on uninitialized iterator";
 	return index < vp->count;
 }
 
@@ -107,17 +132,6 @@ T Vector<T>::Iterator::next() {
 	if (!has_next())
 		cout << "ERROR: next: No more elements";
 	return vp->get_at(index++);
-}
-
-template <typename T>
-void Vector<T>::expand_capacity() {
-	capacity *= 2;
-	T *old_elements = elements;
-	elements = new T[capacity];
-	for (int i = 0; i < count; i++) {
-		elements[i] = old_elements[i];
-	}
-	delete[] old_elements;
 }
 
 #endif

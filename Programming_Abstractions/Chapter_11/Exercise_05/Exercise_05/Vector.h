@@ -33,11 +33,12 @@ public:
 	Iterator iterator();
 
 private:
-	static const int INITIAL_CAPACITY = 100;
-	T *elements;
-	int capacity;
+	struct cell_t {
+		T element;
+		cell_t *next;
+	};
+	cell_t *head;
 	int count;
-	void expand_capacity();
 };
 
 #include "Vector.hpp"
