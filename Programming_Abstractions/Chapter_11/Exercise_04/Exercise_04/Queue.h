@@ -10,6 +10,7 @@ public:
 	bool is_empty();
 	void clear();
 	void enqueue(T elem);
+	void enqueue(T elem, double priority);
 	T dequeue();
 	T peek();
 	void reverse();
@@ -17,6 +18,7 @@ private:
 	struct cell_t {
 		cell_t *next;
 		T element;
+		double priority;
 	};
 	cell_t *head;
 	cell_t *tail;

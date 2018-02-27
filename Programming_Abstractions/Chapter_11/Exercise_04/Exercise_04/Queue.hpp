@@ -30,6 +30,7 @@ void Queue<T>::clear() {
 template <typename T>
 void Queue<T>::enqueue(T elem) {
 	cell_t *new_cell = new cell_t;
+	new_cell->priority = 0;
 	new_cell->element = elem;
 	new_cell->next = NULL;
 	if (count == 0)
@@ -37,6 +38,34 @@ void Queue<T>::enqueue(T elem) {
 	else
 		tail->next = new_cell;
 	tail = new_cell;
+	count++;
+}
+
+template <typename T>
+void Queue<T>::enqueue(T elem, double priority) {
+	cell_t *new_cell = new cell_t;
+	new_cell->priority = priority;
+	new_cell->element = elem;
+	cell_t *cursor = head;
+	if (count == 0) {
+		new_cell->next = NULL;
+		head = new_cell;
+		tail = new_cell;
+	}
+	else {
+		if (head->priority > priority) {
+			new_cell->next = head;
+			head = new_cell;
+		}
+		else {
+			while (cursor->next != NULL && cursor->next->priority <= priority)
+				cursor = cursor->next;
+			if (cursor == tail)
+				tail = new_cell;
+			new_cell->next = cursor->next;
+			cursor->next = new_cell;
+		}
+	}
 	count++;
 }
 
