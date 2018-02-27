@@ -5,7 +5,7 @@ Queue<T>::Queue() {
 	capacity = INITIAL_CAPACITY;
 	elements = new T[capacity];
 	head = 0;
-	tail = 0;
+	count = 0;
 }
 
 template <typename T>
@@ -15,25 +15,25 @@ Queue<T>::~Queue() {
 
 template <typename T>
 int Queue<T>::size() {
-	return (tail + capacity - head) % capacity;
+	return count;
 }
 
 template <typename T>
 bool Queue<T>::is_empty() {
-	return (head == tail);
+	return (count == 0);
 }
 
 template <typename T>
 void Queue<T>::clear() {
-	head = tail = 0;
+	head = count = 0;
 }
 
 template <typename T>
 void Queue<T>::enqueue(T elem) {
-	if (size() == capacity - 1)
+	if (count == capacity)
 		expand_capacity();
-	elements[tail] = elem;
-	tail = (tail + 1) % capacity;
+	elements[(head + count) % capacity] = elem;
+	count++;
 }
 
 template <typename T>
@@ -42,6 +42,7 @@ T Queue<T>::dequeue() {
 		cout << "ERROR: dequeue: Attempting to dequeue an empty queue" << endl;
 	T result = elements[head];
 	head = (head + 1) % capacity;
+	count--;
 	return result;
 }
 
@@ -54,14 +55,12 @@ T Queue<T>::peek() {
 
 template <typename T>
 void Queue<T>::expand_capacity() {
-	int count = size();
 	capacity *= 2;
 	T *old_elements = elements;
 	elements = new T[capacity];
 	for (int i = 0; i < count; i++)
 		elements[i] = old_elements[(head + i) % capacity];
 	head = 0;
-	tail = count;
 	delete[] old_elements;
 }
 

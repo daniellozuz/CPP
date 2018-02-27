@@ -17,7 +17,7 @@ private:
 	T *elements;
 	int capacity;
 	int head;
-	int tail;
+	int count;
 	void expand_capacity();
 };
 
