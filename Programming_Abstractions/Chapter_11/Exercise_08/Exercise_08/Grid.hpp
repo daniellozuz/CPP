@@ -3,6 +3,7 @@
 template <typename T>
 Grid<T>::Grid() {
 	rows = cols = 0;
+	timestamp = 0;
 	elements = NULL;
 }
 
@@ -37,6 +38,7 @@ void Grid<T>::resize(int num_rows, int num_cols) {
 	elements = new int*[rows];
 	for (int i = 0; i < rows; i++)
 		elements[i] = new int[cols];
+	timestamp = 0;
 }
 
 template <typename T>
@@ -51,6 +53,7 @@ void Grid<T>::set_at(int row, int col, T element) {
 	if (!in_bounds(row, col))
 		cout << "ERROR: set_at: no element with such indeces";
 	elements[row][col] = element;
+	timestamp++;
 }
 
 template <typename T>
@@ -72,6 +75,7 @@ template <typename T>
 Grid<T>::Iterator::Iterator(Grid *gp) {
 	this->gp = gp;
 	row_index = col_index = 0;
+	timestamp = gp->timestamp;
 }
 
 template <typename T>
@@ -83,6 +87,8 @@ bool Grid<T>::Iterator::has_next() {
 
 template <typename T>
 T Grid<T>::Iterator::next() {
+	if (timestamp != gp->timestamp)
+		cout << "ERROR: next called on modified iterator";
 	if (gp == NULL)
 		cout << "ERROR: next called on uninitialized iterator";
 	if (!has_next())

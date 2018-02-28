@@ -34,8 +34,11 @@ int main(void) {
 	cout << (grid2.get_at(1, 2) == 6);
 
 	Grid<int>::Iterator iterator = grid2.iterator();
-	while (iterator.has_next())
+	while (iterator.has_next()) {
 		cout << iterator.next() << endl;
+		cout << grid2.get_at(0, 0);
+		grid2.set_at(0, 0, 0);
+	}
 
 	cin.get();
 	return 0;

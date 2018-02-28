@@ -24,6 +24,7 @@ public:
 		bool has_next();
 		T next();
 	private:
+		int timestamp;
 		Grid *gp;
 		int row_index, col_index;
 		Iterator(Grid *gp);
@@ -36,6 +37,7 @@ public:
 private:
 	int rows;
 	int cols;
+	int timestamp;
 	T **elements;
 };
 
