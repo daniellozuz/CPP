@@ -25,7 +25,7 @@ public:
 		T next();
 	private:
 		Grid *gp;
-		int index;
+		int row_index, col_index;
 		Iterator(Grid *gp);
 		friend class Grid;
 	};

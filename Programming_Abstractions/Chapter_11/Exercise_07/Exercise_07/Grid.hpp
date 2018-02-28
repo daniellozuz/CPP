@@ -60,7 +60,7 @@ bool Grid<T>::in_bounds(int row, int col) {
 
 template <typename T>
 Grid<T>::Iterator::Iterator() {
-	vp = NULL;
+	gp = NULL;
 }
 
 template <typename T>
@@ -69,25 +69,30 @@ typename Grid<T>::Iterator Grid<T>::iterator() {
 }
 
 template <typename T>
-Grid<T>::Iterator::Iterator(Grid *vp) {
-	this->vp = vp;
-	index = 0;
+Grid<T>::Iterator::Iterator(Grid *gp) {
+	this->gp = gp;
+	row_index = col_index = 0;
 }
 
 template <typename T>
 bool Grid<T>::Iterator::has_next() {
-	if (vp == NULL)
+	if (gp == NULL)
 		cout << "ERROR: has_next called on uninitialized iterator";
-	return index < vp->size();
+	return (row_index + 1) * (col_index + 1) < (gp->rows + 1) * (gp->cols + 1);
 }
 
 template <typename T>
 T Grid<T>::Iterator::next() {
-	if (vp == NULL)
+	if (gp == NULL)
 		cout << "ERROR: next called on uninitialized iterator";
 	if (!has_next())
 		cout << "ERROR: next: No more elements";
-	return vp->get_at(index++);
+	T result = gp->get_at(row_index, col_index);
+	if (++col_index == cols) {
+		col_index = 0;
+		row_index++;
+	}
+	return result;
 }
 
 #endif
