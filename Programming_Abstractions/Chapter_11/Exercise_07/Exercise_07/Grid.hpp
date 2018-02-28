@@ -78,7 +78,7 @@ template <typename T>
 bool Grid<T>::Iterator::has_next() {
 	if (gp == NULL)
 		cout << "ERROR: has_next called on uninitialized iterator";
-	return (row_index + 1) * (col_index + 1) < (gp->rows + 1) * (gp->cols + 1);
+	return row_index < gp->rows;
 }
 
 template <typename T>
