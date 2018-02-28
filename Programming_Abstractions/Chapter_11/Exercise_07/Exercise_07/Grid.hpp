@@ -3,25 +3,19 @@
 template <typename T>
 Grid<T>::Grid() {
 	rows = cols = 0;
-	grid = NULL;
+	elements = NULL;
 }
 
 template <typename T>
 Grid<T>::Grid(int num_rows, int num_cols) {
-	rows = num_rows;
-	cols = num_cols;
-	grid = new GridRow[num_rows];
-	for (int i = 0; i < num_rows; i++) {
-		GridRow prev_row = grid[i];
-		GridRow *new_row;
-		new_row = new GridRow(this);
-		grid[i] = new_row;
-	}
+	resize(num_rows, num_cols);
 }
 
 template <typename T>
 Grid<T>::~Grid() {
-	delete[] grid;
+	for (int i = 0; i < rows; i++)
+		delete[] elements[i];
+	delete[] elements;
 }
 
 template <typename T>
@@ -40,26 +34,23 @@ void Grid<T>::resize(int num_rows, int num_cols) {
 		cout << "ERROR: resize: cannot create grid with such dimensions";
 	rows = num_rows;
 	cols = num_cols;
-	grid = new GridRow[rows];
+	elements = new int*[rows];
+	for (int i = 0; i < rows; i++)
+		elements[i] = new int[cols];
 }
 
 template <typename T>
 T Grid<T>::get_at(int row, int col) {
 	if (!in_bounds(row, col))
 		cout << "ERROR: get_at: no element with such indeces";
-	return grid[row][col];
+	return elements[row][col];
 }
 
 template <typename T>
 void Grid<T>::set_at(int row, int col, T element) {
 	if (!in_bounds(row, col))
 		cout << "ERROR: set_at: no element with such indeces";
-	grid[row].set_at(col, element);
-}
-
-template <typename T>
-void Grid<T>::GridRow::set_at(int col, T element) {
-	elements[col] = element;
+	elements[row][col] = element;
 }
 
 template <typename T>
@@ -97,17 +88,6 @@ T Grid<T>::Iterator::next() {
 	if (!has_next())
 		cout << "ERROR: next: No more elements";
 	return vp->get_at(index++);
-}
-
-template <typename T>
-Grid<T>::GridRow::GridRow() {
-}
-
-template <typename T>
-Grid<T>::GridRow::GridRow(Grid *gp) {
-	if (gp->rows < 1)
-		cout << "ERROR: GridRow: cannot create row smaller than one element";
-	*elements = new T[gp->rows];
 }
 
 #endif
