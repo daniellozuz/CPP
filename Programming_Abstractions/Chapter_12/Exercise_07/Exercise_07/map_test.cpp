@@ -17,6 +17,10 @@ int main(void) {
 	while (iterator.has_next())
 		cout << "Key: " << iterator.next() << endl;
 
+	cout << hash_map["2"] << endl;
+	hash_map["2"] = 7;
+	cout << hash_map["2"] << endl;
+
 	cin.get();
 	return 0;
 }

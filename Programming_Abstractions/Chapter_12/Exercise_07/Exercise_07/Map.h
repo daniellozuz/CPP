@@ -25,6 +25,7 @@ public:
 	T get(string key);
 	bool contains_key(string key);
 	void remove(string key);
+	T &operator[](string key);
 
 	class Iterator {
 	public:

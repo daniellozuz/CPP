@@ -49,7 +49,7 @@ template <typename T>
 T Map<T>::get(string key) {
 	cell_t *cell = find_cell(buckets[hash(key) % n_buckets], key);
 	if (cell == NULL)
-		cout << "ERROR: Attempt to get value for key that is not in the map.";
+		throw logic_error("ERROR: Attempt to get value for key that is not in the map.");
 	return cell->value;
 }
 
@@ -154,6 +154,14 @@ string Map<T>::Iterator::next() {
 		cell = cell->link;
 		return result;
 	}
+}
+
+template <typename T>
+T &Map<T>::operator[](string key) {
+	cell_t *cell = find_cell(buckets[hash(key) % n_buckets], key);
+	if (cell == NULL)
+		throw logic_error("ERROR: Attempt to [] value for key that is not in the map.");
+	return cell->value;
 }
 
 #endif
