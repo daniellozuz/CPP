@@ -51,6 +51,7 @@ stdafx.cpp
 *.db
 *.opendb
 targetver.h
+*.user
 
 # OpenCV files
 *.jpg
