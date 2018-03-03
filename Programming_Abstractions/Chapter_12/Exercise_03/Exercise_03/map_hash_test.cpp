@@ -1,26 +1,18 @@
 #include <iostream>
+#include <cmath>
 #include "Map.h"
 
 using namespace std;
 
+const int LIMIT = 20000;
+
 int main(void) {
-	Map<int> roman_numerals;
+	Map<int> hash_map;
 
-	roman_numerals.put("I", 1);
-	roman_numerals.put("V", 5);
-	roman_numerals.put("X", 10);
-	roman_numerals.put("L", 50);
-	roman_numerals.put("C", 100);
-	roman_numerals.put("D", 500);
-	roman_numerals.put("M", 1000);
+	for (int i = 0; i < LIMIT; i++)
+		hash_map.put(to_string(i), i);
 
-	cout << roman_numerals.get("I") << endl;
-	cout << roman_numerals.get("V") << endl;
-	cout << roman_numerals.get("X") << endl;
-	cout << roman_numerals.get("L") << endl;
-	cout << roman_numerals.get("C") << endl;
-	cout << roman_numerals.get("D") << endl;
-	cout << roman_numerals.get("M") << endl;
+	hash_map.display_hash_table_statistics();
 
 	cin.get();
 	return 0;

@@ -18,9 +18,10 @@ public:
 	T get(string key);
 	bool contains_key(string key);
 	void remove(string key);
+	void display_hash_table_statistics();
 
 private:
-	static const int INITIAL_SIZE = 101;
+	static const int INITIAL_SIZE = 100;
 	struct cell_t {
 		string key;
 		T value;

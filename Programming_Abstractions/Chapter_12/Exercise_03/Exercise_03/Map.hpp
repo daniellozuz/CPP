@@ -103,4 +103,19 @@ void Map<T>::delete_chain(cell_t *chain) {
 	}
 }
 
+template <typename T>
+void Map<T>::display_hash_table_statistics() {
+	double mean = size() / n_buckets;
+	double variance = 0.0;
+	for (int i = 0; i < n_buckets; i++) {
+		int length = 0;
+		for (cell_t *cp = buckets[i]; cp != NULL; cp = cp->link)
+			length++;
+		variance += pow(mean - length, 2);
+	}
+	variance /= n_buckets;
+	cout << "Mean: " << mean << endl;
+	cout << "Standard deviation: " << sqrt(variance) << endl;
+}
+
 #endif
