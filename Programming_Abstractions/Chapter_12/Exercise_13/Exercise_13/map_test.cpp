@@ -5,8 +5,11 @@ using namespace std;
 
 const int LIMIT = 50;
 
+int compare_function(string one, string two);
+int hash_function(string key);
+
 int main(void) {
-	Map<string, int> hash_map;
+	Map<string, int> hash_map(compare_function, hash_function);
 
 	for (int i = 0; i < LIMIT; i++) {
 		hash_map.put(to_string(i), i);
@@ -21,7 +24,8 @@ int main(void) {
 	hash_map["2"] = 7;
 	cout << hash_map["2"] << endl;
 
-	Map<string, int> hash_map1, hash_map2;
+	Map<string, int> hash_map1(compare_function, hash_function);
+	Map<string, int> hash_map2(compare_function, hash_function);
 
 	for (int i = 0; i < LIMIT; i++)
 		hash_map1.put(to_string(i), i);
@@ -33,4 +37,20 @@ int main(void) {
 
 	cin.get();
 	return 0;
+}
+
+int compare_function(string one, string two) {
+	if (one == two)
+		return 0;
+	if (one < two)
+		return -1;
+	return 1;
+}
+
+int hash_function(string key) {
+	const long MULTIPLIER = -1664117991L;
+	unsigned long hashcode = 0;
+	for (int i = 0; i < key.length(); i++)
+		hashcode = hashcode * MULTIPLIER + key[i];
+	return int(hashcode & (unsigned(-1) >> 1));
 }

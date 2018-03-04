@@ -1,11 +1,13 @@
 #ifdef _map_h
 
 template <typename key_T, typename value_T>
-Map<key_T, value_T>::Map() {
+Map<key_T, value_T>::Map(int(*cmp)(key_T, key_T), int(*hash)(key_T)) {
 	n_buckets = INITIAL_SIZE;
 	buckets = new cell_t *[n_buckets];
 	for (int i = 0; i < n_buckets; i++)
 		buckets[i] = NULL;
+	this->hash = hash;
+	this->cmp = cmp;
 }
 
 template <typename key_T, typename value_T>
@@ -63,7 +65,7 @@ void Map<key_T, value_T>::remove(key_T key) {
 	int index = hash(key) % n_buckets;
 	cell_t *prev = NULL;
 	cell_t *cp = buckets[index];
-	while (cp != NULL && cp->key != key) {
+	while (cp != NULL && cmp(cp->key, key) != 0) {
 		prev = cp;
 		cp = cp->link;
 	}
@@ -78,18 +80,9 @@ void Map<key_T, value_T>::remove(key_T key) {
 }
 
 template <typename key_T, typename value_T>
-int Map<key_T, value_T>::hash(key_T s) {
-	const long MULTIPLIER = -1664117991L;
-	unsigned long hashcode = 0;
-	for (int i = 0; i < s.length(); i++)
-		hashcode = hashcode * MULTIPLIER + s[i];
-	return hashcode & ((unsigned)-1 >> 1);
-}
-
-template <typename key_T, typename value_T>
 typename Map<key_T, value_T>::cell_t *Map<key_T, value_T>::find_cell(cell_t *chain, key_T key) {
 	for (cell_t *cp = chain; cp != NULL; cp = cp->link) {
-		if (cp->key == key)
+		if (cmp(cp->key, key) == 0)
 			return cp;
 	}
 	return NULL;

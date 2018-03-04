@@ -9,7 +9,7 @@ using namespace std;
 template <typename key_T, typename value_T>
 class Map {
 public:
-	Map();
+	Map(int (*cmp)(key_T, key_T), int (*hash)(key_T));
 	~Map();
 
 	struct cell_t {
@@ -49,7 +49,8 @@ private:
 	cell_t **buckets;
 	int n_buckets;
 	int n_entries;
-	int hash(key_T s);
+	int (*hash)(key_T s);
+	int (*cmp)(key_T one, key_T two);
 	cell_t *find_cell(cell_t *chain, key_T key);
 	void delete_chain(cell_t *chain);
 };
