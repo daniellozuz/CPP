@@ -136,14 +136,14 @@ key_T Map<key_T, value_T>::Iterator::next() {
 		for (int i = bucket + 1; i < mp->n_buckets; i++) {
 			if (mp->buckets[i] != NULL) {
 				cell = mp->buckets[i];
-				string result = cell->key;
+				key_T result = cell->key;
 				bucket = i;
 				return result;
 			}
 		}
 	}
 	else {
-		string result = cell->link->key;
+		key_T result = cell->link->key;
 		cell = cell->link;
 		return result;
 	}
@@ -161,7 +161,7 @@ template <typename key_T, typename value_T>
 void Map<key_T, value_T>::copy_entries_into(Map &target) {
 	Iterator it = iterator();
 	while (it.has_next()) {
-		string key = it.next();
+		key_T key = it.next();
 		target.put(key, get(key));
 	}
 }
