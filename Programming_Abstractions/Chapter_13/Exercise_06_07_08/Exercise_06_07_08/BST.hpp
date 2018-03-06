@@ -145,19 +145,15 @@ bool BST<T>::has_binary_search_property() {
 		T *current_value;
 	};
 	auto fun = [this](T elem, client_data_t &data) { // Why void instead of auto does not work?
-		if (data.current_value == NULL)
-			data.current_value = &elem;
-		else {
-			if (cmp_fn(*data.current_value, elem) == 1)
-				data.verdict = false;
-			data.current_value = &elem;
-		}
+		if (data.current_value != NULL && cmp_fn(*data.current_value, elem) == 1)
+			data.verdict = false;
+		data.current_value = &elem;
 	};
 	client_data_t my_data;
 	my_data.verdict = true;
 	my_data.current_value = NULL;
 	map_all<client_data_t>(fun, my_data);
-	return my_data->verdict;
+	return my_data.verdict;
 	// Do inorder walk (should yield nondecreasing strings).
 	// recursively_map_all is inorder walk!
 	// Just pass it appropriate lambda and return data
