@@ -26,6 +26,10 @@ private:
 		T data;
 		node_t *left, *right;
 	};
+	struct client_data_t {
+		bool verdict;
+		T *current_value;
+	};
 
 	node_t *root;
 	int(*cmp_fn)(T, T);
@@ -36,9 +40,16 @@ private:
 	void recursively_free_tree(node_t *node);
 	int height(node_t *node);
 	int is_balanced(node_t *node, bool &verdict);
+	void my_fun(T elem, client_data_t &data);
 
 	template <typename client_T>
 	void recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data);
+	
+	template <typename client_T>
+	void map_all2(void(BST<T>::*fn)(T elem, client_T &data), client_T &data);
+
+	template <typename client_T>
+	void recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_T &), client_T &data);
 };
 
 #include "BST.hpp"
