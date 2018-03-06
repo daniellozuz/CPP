@@ -3,7 +3,7 @@
 template <typename T>
 BST<T>::BST(int(*cmp_fn)(T one, T two)) {
 	root = NULL;
-	this->cmp_fn = cmp_fn;
+	cmp_fn = cmp_fn;
 }
 
 template <typename T>
@@ -144,7 +144,7 @@ bool BST<T>::has_binary_search_property() {
 		bool verdict;
 		T *current_value;
 	};
-	auto fun = [this](T elem, client_data_t &data) { // Why void instead of auto does not work?
+	function<void(T elem, client_data_t &data)> my_fun = [this](T elem, client_data_t &data) {
 		if (data.current_value != NULL && cmp_fn(*data.current_value, elem) == 1)
 			data.verdict = false;
 		data.current_value = &elem;
@@ -152,11 +152,8 @@ bool BST<T>::has_binary_search_property() {
 	client_data_t my_data;
 	my_data.verdict = true;
 	my_data.current_value = NULL;
-	map_all<client_data_t>(fun, my_data);
+	map_all<client_data_t>(my_fun, my_data); // No idea ?
 	return my_data.verdict;
-	// Do inorder walk (should yield nondecreasing strings).
-	// recursively_map_all is inorder walk!
-	// Just pass it appropriate lambda and return data
 }
 
 template <typename T>
