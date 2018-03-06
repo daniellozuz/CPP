@@ -14,7 +14,8 @@ public:
 	bool remove(T key);
 	int height();
 	bool is_balanced();
-
+	bool has_binary_search_property();
+	
 	template <typename client_T>
 	void map_all(void(*fn)(T elem, client_T &data), client_T &data);
 
@@ -36,6 +37,9 @@ private:
 
 	template <typename client_T>
 	void recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data);
+	
+	template <typename client_T>
+	void(*fun)(T elem, client_T &data);
 };
 
 #include "BST.hpp"

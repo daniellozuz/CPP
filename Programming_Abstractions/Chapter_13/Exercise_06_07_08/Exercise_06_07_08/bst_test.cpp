@@ -23,6 +23,8 @@ int main(void) {
 	tree.add("Sixth");
 	cout << tree.height() << "  " << tree.is_balanced() << endl;
 
+	cout << tree.has_binary_search_property() << endl;
+
 	cin.get();
 	return 0;
 }
