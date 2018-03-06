@@ -37,9 +37,6 @@ private:
 
 	template <typename client_T>
 	void recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data);
-	
-	template <typename client_T>
-	void(*fun)(T elem, client_T &data);
 };
 
 #include "BST.hpp"

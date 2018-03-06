@@ -144,36 +144,23 @@ bool BST<T>::has_binary_search_property() {
 		bool verdict;
 		T *current_value;
 	};
-	void fun = [](T elem, client_data_t &data) {
-		if (data->current_value == NULL)
-			data->current_value = elem;
+	auto fun = [this](T elem, client_data_t &data) { // Why void instead of auto does not work?
+		if (data.current_value == NULL)
+			data.current_value = &elem;
 		else {
-			if (data->current_value > elem)
-				data->verdict = false;
-			data->current_value = elem;
+			if (cmp_fn(*data.current_value, elem) == 1)
+				data.verdict = false;
+			data.current_value = &elem;
 		}
 	};
-	client_data_t *my_data;
-	my_data->verdict = true;
-	my_data->current_value = NULL;
-	map_all(fun, my_data);
+	client_data_t my_data;
+	my_data.verdict = true;
+	my_data.current_value = NULL;
+	map_all<client_data_t>(fun, my_data);
 	return my_data->verdict;
 	// Do inorder walk (should yield nondecreasing strings).
 	// recursively_map_all is inorder walk!
 	// Just pass it appropriate lambda and return data
-}
-
-// I want to use the function below as a parameter in the function above (line 150). Normally I pass free fuction from outside the template.
-template <typename T>
-template <typename client_T>
-void BST<T>::(*fun)(T elem, client_T &data) {
-	if (data->current_value == NULL)
-		data->current_value = elem;
-	else {
-		if (data->current_value > elem)
-			data->verdict = false;
-		data->current_value = elem;
-	}
 }
 
 template <typename T>
