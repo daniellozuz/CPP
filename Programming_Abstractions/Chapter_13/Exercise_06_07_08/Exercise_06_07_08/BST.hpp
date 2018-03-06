@@ -143,7 +143,7 @@ bool BST<T>::has_binary_search_property() {
 	client_data_t my_data;
 	my_data.verdict = true;
 	my_data.current_value = NULL;
-	map_all2<client_data_t>(&BST<T>::my_fun, my_data);
+	map_all2(&BST<T>::my_fun, my_data);
 	return my_data.verdict;
 }
 
@@ -171,14 +171,12 @@ void BST<T>::recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_
 }
 
 template <typename T>
-template <typename client_T>
-void BST<T>::map_all2(void(BST<T>::*fn)(T elem, client_T &data), client_T &data) {
+void BST<T>::map_all2(void(BST<T>::*fn)(T elem, client_data_t &data), client_data_t &data) {
 	recursively_map_all2(root, fn, data);
 }
 
 template <typename T>
-template <typename client_T>
-void BST<T>::recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_T &), client_T &data) {
+void BST<T>::recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_data_t &), client_data_t &data) {
 	if (node != NULL) {
 		recursively_map_all2(node->left, fn, data);
 		fn(node->data, data);

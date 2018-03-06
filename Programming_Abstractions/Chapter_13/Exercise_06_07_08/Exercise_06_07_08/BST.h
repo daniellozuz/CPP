@@ -45,11 +45,9 @@ private:
 	template <typename client_T>
 	void recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data);
 	
-	template <typename client_T>
-	void map_all2(void(BST<T>::*fn)(T elem, client_T &data), client_T &data);
+	void map_all2(void(BST<T>::*fn)(T elem, client_data_t &data), client_data_t &data);
 
-	template <typename client_T>
-	void recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_T &), client_T &data);
+	void recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_data_t &), client_data_t &data);
 };
 
 #include "BST.hpp"
