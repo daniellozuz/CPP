@@ -118,8 +118,26 @@ int BST<T>::height(node_t *node) {
 	int left_height = 1 + height(node->left);
 	int right_height = 1 + height(node->right);
 	return (left_height > right_height) ? left_height : right_height;
-
 }
+
+template <typename T>
+bool BST<T>::is_balanced() {
+	bool verdict = true;
+	is_balanced(root, verdict);
+	return verdict;
+}
+
+template <typename T>
+int BST<T>::is_balanced(node_t *node, bool &verdict) {
+	if (node == NULL)
+		return 0;
+	int left_height = height(node->left);
+	int right_height = height(node->right);
+	if (left_height > right_height + 1 || left_height + 1 < right_height)
+		verdict = false;
+	return (left_height > right_height) ? 1 + left_height : 1 + right_height;
+}
+
 
 template <typename T>
 template <typename client_T>

@@ -13,6 +13,7 @@ public:
 	bool add(T elem);
 	bool remove(T key);
 	int height();
+	bool is_balanced();
 
 	template <typename client_T>
 	void map_all(void(*fn)(T elem, client_T &data), client_T &data);
@@ -31,6 +32,7 @@ private:
 	void remove_target_node(node_t * & node);
 	void recursively_free_tree(node_t *node);
 	int height(node_t *node);
+	int is_balanced(node_t *node, bool &verdict);
 
 	template <typename client_T>
 	void recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data);

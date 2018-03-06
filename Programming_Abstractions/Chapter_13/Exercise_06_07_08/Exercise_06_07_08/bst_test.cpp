@@ -9,16 +9,19 @@ int cmp_fn(string one, string two);
 int main(void) {
 	BST<string> tree(cmp_fn);
 	
-	cout << tree.height() << endl;
-
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("First");
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("Second");
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("Third");
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("Fourth");
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("Fifth");
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 	tree.add("Sixth");
-
-	cout << tree.height() << endl;
+	cout << tree.height() << "  " << tree.is_balanced() << endl;
 
 	cin.get();
 	return 0;
