@@ -167,13 +167,13 @@ template <typename T>
 void BST<T>::draw_node(Mat img, node_t *node, Point anchor, int level) {
 	if (node != NULL) {
 		Scalar color = Scalar(255, 255, 255);
+		Size text_size = getTextSize(node->data, FONT_HERSHEY_PLAIN, 1.0, 1, 0);
+		Point next_left = anchor + Point(-WINDOW_WIDTH / (level*level), VERTICAL_SEPARATION);
+		Point next_right = anchor + Point(WINDOW_WIDTH / (level*level), VERTICAL_SEPARATION);
 		rectangle(img, anchor + Point(-CELL_WIDTH / 2, 0), anchor + Point(CELL_WIDTH / 2, CELL_HEIGHT), color);
 		line(img, anchor + Point(-CELL_WIDTH / 2, CELL_HEIGHT / 2), anchor + Point(CELL_WIDTH / 2, CELL_HEIGHT / 2), color);
 		line(img, anchor + Point(0, CELL_HEIGHT / 2), anchor + Point(0, CELL_HEIGHT), color);
-		Size text_size = getTextSize(node->data, FONT_HERSHEY_PLAIN, 1.0, 1, 0);
 		putText(img, node->data, anchor + Point(-text_size.width / 2, text_size.height + 5), FONT_HERSHEY_PLAIN, 1.0, color);
-		Point next_left = anchor + Point(-WINDOW_WIDTH / (level*level), VERTICAL_SEPARATION);
-		Point next_right = anchor + Point(WINDOW_WIDTH / (level*level), VERTICAL_SEPARATION);
 		if (node->left != NULL)
 			line(img, anchor + Point(-CELL_WIDTH / 4, 3 * CELL_HEIGHT / 4), Point(next_left.x, next_left.y), color);
 		else
