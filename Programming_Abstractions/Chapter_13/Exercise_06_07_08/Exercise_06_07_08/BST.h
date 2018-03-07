@@ -1,8 +1,6 @@
 #ifndef _bst_h
 #define _bst_h
 
-#include <functional>
-
 using namespace std;
 
 template <typename T>

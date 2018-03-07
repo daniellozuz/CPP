@@ -154,6 +154,23 @@ void BST<T>::my_fun(T elem, client_data_t &data) {
 	data.current_value = &elem;
 }
 
+
+
+
+template <typename T>
+void BST<T>::map_all2(void(BST<T>::*fn)(T elem, client_data_t &data), client_data_t &data) {
+	recursively_map_all2(root, fn, data);
+}
+
+template <typename T>
+void BST<T>::recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_data_t &), client_data_t &data) {
+	if (node != NULL) {
+		recursively_map_all2(node->left, fn, data);
+		fn(node->data, data);
+		recursively_map_all2(node->right, fn, data);
+	}
+}
+
 template <typename T>
 template <typename client_T>
 void BST<T>::map_all(void(*fn)(T elem, client_T &data), client_T &data) {
@@ -167,20 +184,6 @@ void BST<T>::recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_
 		recursively_map_all(node->left, fn, data);
 		fn(node->data, data);
 		recursively_map_all(node->right, fn, data);
-	}
-}
-
-template <typename T>
-void BST<T>::map_all2(void(BST<T>::*fn)(T elem, client_data_t &data), client_data_t &data) {
-	recursively_map_all2(root, fn, data);
-}
-
-template <typename T>
-void BST<T>::recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_data_t &), client_data_t &data) {
-	if (node != NULL) {
-		recursively_map_all2(node->left, fn, data);
-		fn(node->data, data);
-		recursively_map_all2(node->right, fn, data);
 	}
 }
 
