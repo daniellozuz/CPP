@@ -3,7 +3,7 @@
 template <typename T>
 BST<T>::BST(int(*cmp_fn)(T one, T two)) {
 	root = NULL;
-	cmp_fn = cmp_fn;
+	this->cmp_fn = cmp_fn;
 }
 
 template <typename T>
@@ -140,50 +140,23 @@ int BST<T>::is_balanced(node_t *node, bool &verdict) {
 
 template <typename T>
 bool BST<T>::has_binary_search_property() {
-	client_data_t my_data;
-	my_data.verdict = true;
-	my_data.current_value = NULL;
-	map_all2(&BST<T>::my_fun, my_data);
-	return my_data.verdict;
+	bool verdict = true;
+	T current_value = "";
+	auto my_fun = [this, &verdict, &current_value](T elem) {
+		if (cmp_fn(current_value, elem) == 1)
+			verdict = false;
+		current_value = elem;
+	};
+	recursively_map_all(root, my_fun);
+	return verdict;
 }
 
 template <typename T>
-void BST<T>::my_fun(T elem, client_data_t &data) {
-	if (data.current_value != NULL && cmp_fn(*data.current_value, elem) == 1)
-		data.verdict = false;
-	data.current_value = &elem;
-}
-
-
-
-
-template <typename T>
-void BST<T>::map_all2(void(BST<T>::*fn)(T elem, client_data_t &data), client_data_t &data) {
-	recursively_map_all2(root, fn, data);
-}
-
-template <typename T>
-void BST<T>::recursively_map_all2(node_t *node, void(BST<T>::*fn)(T, client_data_t &), client_data_t &data) {
+void BST<T>::recursively_map_all(node_t *node, function<void(T)> fn) {
 	if (node != NULL) {
-		recursively_map_all2(node->left, fn, data);
-		fn(node->data, data);
-		recursively_map_all2(node->right, fn, data);
-	}
-}
-
-template <typename T>
-template <typename client_T>
-void BST<T>::map_all(void(*fn)(T elem, client_T &data), client_T &data) {
-	recursively_map_all(root, fn, data);
-}
-
-template <typename T>
-template <typename client_T>
-void BST<T>::recursively_map_all(node_t *node, void(*fn)(T, client_T &), client_T &data) {
-	if (node != NULL) {
-		recursively_map_all(node->left, fn, data);
-		fn(node->data, data);
-		recursively_map_all(node->right, fn, data);
+		recursively_map_all(node->left, fn);
+		fn(node->data);
+		recursively_map_all(node->right, fn);
 	}
 }
 
